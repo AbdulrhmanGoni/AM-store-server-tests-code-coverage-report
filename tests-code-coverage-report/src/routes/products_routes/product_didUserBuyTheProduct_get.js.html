@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/controllers/settings-controllers/getProductsCategoriesList.js</title>
+    <title>Code coverage report for src/routes/products_routes/product_didUserBuyTheProduct_get.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../prettify.css" />
     <link rel="stylesheet" href="../../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../index.html">All files</a> / <a href="index.html">src/controllers/settings-controllers</a> getProductsCategoriesList.js</h1>
+        <h1><a href="../../../index.html">All files</a> / <a href="index.html">src/routes/products_routes</a> product_didUserBuyTheProduct_get.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">41.66% </span>
+                <span class="strong">88.88% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>5/12</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">25% </span>
-                <span class="quiet">Branches</span>
-                <span class='fraction'>1/4</span>
+                <span class='fraction'>8/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">50% </span>
-                <span class="quiet">Functions</span>
-                <span class='fraction'>1/2</span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>2/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">41.66% </span>
+                <span class="strong">100% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>1/1</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">88.88% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>5/12</span>
+                <span class='fraction'>8/9</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -87,50 +87,50 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { readFileSync, writeFile, existsSync } from "fs";
-import SettingsModel from "../../models/Settings.js";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import ProductsController from "../../controllers/products-controllers/ProductsController.js";
+import asyncRouteHandler from "../../utilities/asyncRouteHandler.js";
+import extractAuthFromRequestHeaders from "../../utilities/extractAuthFromRequestHeaders.js";
+import { verifyJWT } from "../../utilities/jwtUtilities.js";
 &nbsp;
-export default async function getProductsCategoriesList() {
-    try {
-        const cachePath = "./src/cache/productsCategoriesList.json"
-        if (existsSync(cachePath)) {
-            const cachedProductsCategoriesList = readFileSync(cachePath, { encoding: "utf8" })
-            return JSON.parse(cachedProductsCategoriesList)
-        } else <span class="missing-if-branch" title="else path not taken" >E</span>{
-            const [data] = <span class="cstat-no" title="statement not covered" >await SettingsModel.find({}, "productsCategories");</span>
-<span class="cstat-no" title="statement not covered" >            if (data?.productsCategories) {</span>
-<span class="cstat-no" title="statement not covered" >                writeFile(cachePath, JSON.stringify(data.productsCategories), <span class="fstat-no" title="function not covered" >()</span> =&gt; { })</span>
-<span class="cstat-no" title="statement not covered" >                return data.productsCategories</span>
-            } else <span class="cstat-no" title="statement not covered" >return []</span>
+export default asyncRouteHandler(
+    async function product_didUserBuyTheProduct_get(req, res) {
+        const { accessToken } = extractAuthFromRequestHeaders(req)
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (accessToken) {
+            try {
+                const userId = (verifyJWT(accessToken)).userId
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (userId) {
+                    const { productId } = req.params;
+                    const response = await ProductsController.didUserBuyTheProduct(productId, userId);
+                    return res.status(200).json(response);
+                }
+            } catch { }
         }
-    } catch (error) {
-<span class="cstat-no" title="statement not covered" >        console.log(error)</span>
-<span class="cstat-no" title="statement not covered" >        return;</span>
+<span class="cstat-no" title="statement not covered" >        res.status(200).json(false);</span>
     }
-}</pre></td></tr></table></pre>
+)</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-04-21T14:52:58.084Z
+                at 2024-04-25T19:08:21.155Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
